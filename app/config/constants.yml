@@ -1,0 +1,14 @@
+defaults: &defaults
+  name: 'Neko'
+  address: 'Akasaka'
+
+development:
+  name: 'CHAGE'
+  address: 'Fukuoka'
+
+test:
+  <<: *defaults
+
+production:
+  name: 'ASKA'
+  address: 'Minami-Aoyama'
