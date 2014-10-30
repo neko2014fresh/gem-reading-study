@@ -1,18 +1,25 @@
 Reading Cocaine
 ====
 
-### Gemを読むことばかりの人生ですみません
+### 飽きてると思いますがGemを読む話です
 
 - でもネタが無いんです
      
 - 家帰ると何もやる気がしないんです
-    
+        
+Jectorの容量制限について
+=====
 
+### 裏側はこうなってます
 
-最近の悩み
+- Viewで容量を変える（契約を変える）
+- サーバ側でレコードを編集
+- GlusterFSのquotaコマンドでOSに反映
+
+それについての悩み
 ===
 
-### ファイルシステムに関わることをすると
+### ファイルシステムの値をupdateしたい
 
 - 何かしらファイルシステムに対して変更を加える必要がある(quotaとか)
     
@@ -55,11 +62,11 @@ cmd = Cocaine::CommandLine.new("sudo gluster", "volume quota :volume_name limit-
 cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, quota: quota
 ```
 
-
 ### Cocaineのポイント
 
 - どのくらいCocaine側で例外処理をカバーしてるのか？
-- コマンドを安全に実行しているのは、どういう仕組みか？
+- どうやって安全なコマンドを生成しているのか（今回は割愛）
+- どうやってコマンドを実行しているのか
 
 
 大事なこと
@@ -72,6 +79,22 @@ cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, 
 - つまりCocaine使うときは例外処理必須です
 
 
+### だけどもだけど
+
+- よく見るエラーのときは、
+
+```
+    unless @expected_outcodes.include?(@exit_status)
+        message = [
+          "Command '#{full_command}' returned #{@exit_status}. Expected #{@expected_outcodes.join(", ")}",
+          "Here is the command output:\n",
+          output
+        ].join("\n")
+        raise Cocaine::ExitStatusError, message
+      end
+```
+
+- `Cocaine::ExitStatusError`がmessageを受け取れる！
 
 ###  ふわっとした流れ
 
@@ -145,16 +168,16 @@ end
 module Cocaine
   class CommandLine
     class ProcessRunnner
-      def call
+      def call(command, env = {}, options = {})
         input, output = IO.pipe
         options[:out] = output
         with_modified_environment(env) do
-        pid = spawn(env, command, options)
-        output.close
-        result = input.read
-        waitpid(pid)
-        input.close
-        result  
+          pid = spawn(env, command, options)
+          output.close
+          result = input.read
+          waitpid(pid)
+          input.close
+          result  
       end
     end
   end
@@ -171,6 +194,10 @@ end
 >RubyでOSの外部コマンドを実行したいときに、spawnを使うと便利だった件 - カイワレの大冒険 Second
 http://www.masudak.net/blog/2013/05/30/201305302308/
 
+
+### callの中身
+
+別途解説
 
 
 ### ClimateControl
@@ -228,3 +255,7 @@ rescue => e
   unsuitable_func
 end
 ```
+
+Cocaine使う時は例外処理必須！
+====
+

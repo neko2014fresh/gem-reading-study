@@ -2558,7 +2558,7 @@ article.smaller q::after {
 </article>
 
 <article>
-<h3>Gemを読むことばかりの人生ですみません</h3>
+<h3>飽きてると思いますがGemを読む話です</h3>
 
 <ul>
 <li><p>でもネタが無いんです</p></li>
@@ -2569,13 +2569,31 @@ article.smaller q::after {
 </article>
 
 <article>
-<h1>最近の悩み</h1>
+<h1>Jectorの容量制限について</h1>
 
 
 </article>
 
 <article>
-<h3>ファイルシステムに関わることをすると</h3>
+<h3>裏側はこうなってます</h3>
+
+<ul>
+<li>Viewで容量を変える（契約を変える）</li>
+<li>サーバ側でレコードを編集</li>
+<li>GlusterFSのquotaコマンドでOSに反映</li>
+</ul>
+
+
+</article>
+
+<article>
+<h1>それについての悩み</h1>
+
+
+</article>
+
+<article>
+<h3>ファイルシステムの値をupdateしたい</h3>
 
 <ul>
 <li><p>何かしらファイルシステムに対して変更を加える必要がある(quotaとか)</p></li>
@@ -2645,7 +2663,8 @@ cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, 
 
 <ul>
 <li>どのくらいCocaine側で例外処理をカバーしてるのか？</li>
-<li>コマンドを安全に実行しているのは、どういう仕組みか？</li>
+<li>どうやって安全なコマンドを生成しているのか（今回は割愛）</li>
+<li>どうやってコマンドを実行しているのか</li>
 </ul>
 
 
@@ -2664,6 +2683,30 @@ cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, 
 <li>cocaine上での例外キャッチは<strong>4ヵ所</strong></li>
 <li><code>CommandNotFound</code>か<strong>それ以外</strong>しかない</li>
 <li>つまりCocaine使うときは例外処理必須です</li>
+</ul>
+
+
+</article>
+
+<article>
+<h3>だけどもだけど</h3>
+
+<ul>
+<li>よく見るエラーのときは、</li>
+</ul>
+
+<pre><code>    unless @expected_outcodes.include?(@exit_status)
+        message = [
+          &quot;Command &#39;#{full_command}&#39; returned #{@exit_status}. Expected #{@expected_outcodes.join(&quot;, &quot;)}&quot;,
+          &quot;Here is the command output:\n&quot;,
+          output
+        ].join(&quot;\n&quot;)
+        raise Cocaine::ExitStatusError, message
+      end
+</code></pre>
+
+<ul>
+<li><code>Cocaine::ExitStatusError</code>がmessageを受け取れる！</li>
 </ul>
 
 
@@ -2765,17 +2808,23 @@ end
         input, output = IO.pipe
         options[:out] = output
         with_modified_environment(env) do
-        pid = spawn(env, command, options)
-        output.close
-        result = input.read
-        waitpid(pid)
-        input.close
-        result  
+          pid = spawn(env, command, options)
+          output.close
+          result = input.read
+          waitpid(pid)
+          input.close
+          result  
       end
     end
   end
 end
 </code></pre>
+
+
+</article>
+
+<article>
+<h1>コマンドの実行</h1>
 
 
 </article>
@@ -2843,6 +2892,10 @@ rescue =&gt; e
 end
 </code></pre>
 
+<ul>
+<li>とりあえずeでキャッチ</li>
+</ul>
+
 
 </article>
 
@@ -2855,9 +2908,16 @@ end
 rescue SomeHogeError =&gt; e
   suitable_func
 rescue =&gt; e
+# 最終的に分からないから
   unsuitable_func
 end
 </code></pre>
+
+
+</article>
+
+<article>
+<h1>Cocaine使う時は例外処理必須！</h1>
 
 </article>
 
