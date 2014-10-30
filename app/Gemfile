@@ -30,6 +30,7 @@ gem 'pry-rails'
 gem 'pry-byebug'
 gem 'pry-stack_explorer'
 
+gem 'cocaine'
 gem 'settingslogic'
 
 # Use ActiveModel has_secure_password
