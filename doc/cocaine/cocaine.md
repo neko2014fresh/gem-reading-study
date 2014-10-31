@@ -93,6 +93,7 @@ cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, 
 ```
 
 - `Commandがよくわからずに死にました`ということしかデフォルトでは分からない。
+- なので、UnixのErrnoを持ってくるようにしたら多少は分かる？（出来るのかそれ。）
 
 ###  ふわっとした流れ
 

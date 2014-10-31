@@ -2706,6 +2706,7 @@ cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, 
 
 <ul>
 <li><code>Commandがよくわからずに死にました</code>ということしかデフォルトでは分からない。</li>
+<li>なので、UnixのErrnoを持ってくるようにしたら多少は分かる？（出来るのかそれ。）</li>
 </ul>
 
 
@@ -2832,7 +2833,7 @@ end
 <h3>Process.spawn</h3>
 
 <ul>
-<li>OSのコマンドを実行してくれる</li>
+<li>OSのコマンドを実行してくれる(systemとかexecとかある)</li>
 </ul>
 
 <pre><code>&gt; pid = spawn(&quot;uname&quot;)
