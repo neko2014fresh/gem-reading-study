@@ -3,9 +3,7 @@ Reading Cocaine
 
 ### 飽きてると思いますがGemを読む話です
 
-- でもネタが無いんです
-     
-- 家帰ると何もやる気がしないんです
+- 寒いから家でお湯割りが捗る
         
 Jectorの容量制限について
 =====
@@ -58,7 +56,7 @@ cmd.run user_name: 'r-fujiwara'
 - 実際
 
 ```
-cmd = Cocaine::CommandLine.new("sudo gluster", "volume quota :volume_name limit-usage :path_for_gluster :quota")
+cmd = Cocaine::CommandLine.new "sudo gluster", "volume quota :volume_name limit-usage :path_for_gluster :quota"
 cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, quota: quota
 ```
 
@@ -187,12 +185,31 @@ end
 コマンドの実行
 ====
 
-### spawn
+### Process.spawn
+
 
 - OSのコマンドを実行してくれる
 
->RubyでOSの外部コマンドを実行したいときに、spawnを使うと便利だった件 - カイワレの大冒険 Second
-http://www.masudak.net/blog/2013/05/30/201305302308/
+```
+> pid = spawn("uname")
+> Process.waitpid pid
+```
+
+- 環境変数の中身を書き換える
+
+```
+> ENV['HOGE'] = 'hoge'
+> pid = spawn("echo $HOGE")
+> Process.waitpid pid
+# => hogeと表示
+
+> pid = spawn({'HOGE' => 'piyo'}, 'echo $HOGE')
+> Process.waitpid pid
+# => piyoと表示
+```
+
+- パーフェクトRubyを読むと良いです
+
 
 
 ### callの中身
@@ -202,9 +219,7 @@ http://www.masudak.net/blog/2013/05/30/201305302308/
 
 ### ClimateControl
 
-- ブロックの中で環境変数を定義するもの
-- 結構面白いのでは？
-
+- `ENV`を上書きしているだけ。環境変数を特に指定しないならブロックの中身を普通に実行する。
 
 **ClimateControl can be used to temporarily assign environment variables within a block:**
 

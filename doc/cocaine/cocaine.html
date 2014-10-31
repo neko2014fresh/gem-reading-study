@@ -2561,8 +2561,7 @@ article.smaller q::after {
 <h3>飽きてると思いますがGemを読む話です</h3>
 
 <ul>
-<li><p>でもネタが無いんです</p></li>
-<li><p>家帰ると何もやる気がしないんです</p></li>
+<li>寒いから家でお湯割りが捗る</li>
 </ul>
 
 
@@ -2651,7 +2650,7 @@ cmd.run user_name: &#39;r-fujiwara&#39;
 <li>実際</li>
 </ul>
 
-<pre><code>cmd = Cocaine::CommandLine.new(&quot;sudo gluster&quot;, &quot;volume quota :volume_name limit-usage :path_for_gluster :quota&quot;)
+<pre><code>cmd = Cocaine::CommandLine.new &quot;sudo gluster&quot;, &quot;volume quota :volume_name limit-usage :path_for_gluster :quota&quot;
 cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, quota: quota
 </code></pre>
 
@@ -2804,7 +2803,7 @@ end
 <pre><code>module Cocaine
   class CommandLine
     class ProcessRunnner
-      def call
+      def call(command, env = {}, options = {})
         input, output = IO.pipe
         options[:out] = output
         with_modified_environment(env) do
@@ -2830,16 +2829,41 @@ end
 </article>
 
 <article>
-<h3>spawn</h3>
+<h3>Process.spawn</h3>
 
 <ul>
 <li>OSのコマンドを実行してくれる</li>
 </ul>
 
-<blockquote>
-<p>RubyでOSの外部コマンドを実行したいときに、spawnを使うと便利だった件 - カイワレの大冒険 Second
-<a href="http://www.masudak.net/blog/2013/05/30/201305302308/">http://www.masudak.net/blog/2013/05/30/201305302308/</a></p>
-</blockquote>
+<pre><code>&gt; pid = spawn(&quot;uname&quot;)
+&gt; Process.waitpid pid
+</code></pre>
+
+<ul>
+<li>環境変数の中身を書き換える</li>
+</ul>
+
+<pre><code>&gt; ENV[&#39;HOGE&#39;] = &#39;hoge&#39;
+&gt; pid = spawn(&quot;echo $HOGE&quot;)
+&gt; Process.waitpid pid
+# =&gt; hogeと表示
+
+&gt; pid = spawn({&#39;HOGE&#39; =&gt; &#39;piyo&#39;}, &#39;echo $HOGE&#39;)
+&gt; Process.waitpid pid
+# =&gt; piyoと表示
+</code></pre>
+
+<ul>
+<li>パーフェクトRubyを読むとok</li>
+</ul>
+
+
+</article>
+
+<article>
+<h3>callの中身</h3>
+
+<p>別途解説</p>
 
 
 </article>
@@ -2848,8 +2872,7 @@ end
 <h3>ClimateControl</h3>
 
 <ul>
-<li>ブロックの中で環境変数を定義するもの</li>
-<li>結構面白いのでは？</li>
+<li><code>ENV</code>を上書きしているだけ。環境変数を特に指定しないならブロックの中身を普通に実行する。</li>
 </ul>
 
 <p><strong>ClimateControl can be used to temporarily assign environment variables within a block:</strong></p>
