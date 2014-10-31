@@ -77,7 +77,7 @@ cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, 
 - つまりCocaine使うときは例外処理必須です
 
 
-### だけどもだけど
+### しかも
 
 - よく見るエラーのときは、
 
@@ -92,7 +92,7 @@ cmd.run volume_name: volume_name.to_s, path_for_gluster: path_for_gluster.to_s, 
       end
 ```
 
-- `Cocaine::ExitStatusError`がmessageを受け取れる！
+- `Commandがよくわからずに死にました`ということしかデフォルトでは分からない。
 
 ###  ふわっとした流れ
 
@@ -188,7 +188,7 @@ end
 ### Process.spawn
 
 
-- OSのコマンドを実行してくれる
+- OSのコマンドを実行してくれる(systemとかexecとかある)
 
 ```
 > pid = spawn("uname")
@@ -209,7 +209,6 @@ end
 ```
 
 - パーフェクトRubyを読むと良いです
-
 
 
 ### callの中身
